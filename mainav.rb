@@ -1,3 +1,17 @@
+#
+# Mainav - simple nesting navigation menu tag for Jekyll
+# 
+# Mainav enables you to create navigation menus for pages and 
+# even have them nesting.
+#
+# @author Aksel Meola <aksel@meola.eu>
+# @version 0.1
+# @date 24.09.15
+#
+# @licence: One of those it's free and don't sue licences. 
+#
+#
+
 module Jekyll
 
   # Add accessor for directory
@@ -22,7 +36,7 @@ module Jekyll
     end
  
     #
-    # Render stuff
+    # Render naviation menu
     #
     def render(context)
 
@@ -82,7 +96,7 @@ module Jekyll
 			#
 			def render_menu(pages, page_ids)
 
-				o = ""
+				output = ""
 
 				for i in 0..page_ids.length-1
 
@@ -94,18 +108,11 @@ module Jekyll
 					else
 						o << %(
 							<li>
-								<a href="#{page_ids[i].url}">#{page_ids[i].data["title"]}</a> 
+							<a href="#{page_ids[i].url}">#{page_ids[i].data["title"]}</a> 
 								<ul>
 									#{ render_menu(pages, subitems) }
 								</ul>
 							</li> )
-
-						#o << %(<ul>)
-						
-						#o << render_menu(pages, subitems);
-
-						#o << %(</ul></li>)
-
 					end
 
 				end
