@@ -10,7 +10,17 @@
 #
 # @licence: One of those it's free and don't sue licences. 
 #
-#
+# 
+=begin
+	
+	TODO:
+		
+		*	Clean code, replace variable names with better ones
+		* Make delimiter and id delimiter load from config file
+		* Add classes to generated HTML for user styles
+		*
+
+=end
 
 module Jekyll
 
@@ -49,7 +59,7 @@ module Jekyll
 				items = render_menu(pages, pages.select{|page| page_id_length( page ) == 1 } )
 			end
 	    
-      %( <ul class="#{@classnames}">#{items}</ul> )
+      return %( <ul class="#{@classnames}">#{items}</ul> )
 
     end
  
@@ -62,31 +72,29 @@ module Jekyll
 	    #
 	    # TODO: Make it search in categories also
 	    def pages_with_category(pages, category)
-	      pages.select { |page|
+	      return pages.select { |page|
 	        !page.data["category"].nil? && page.data["category"] == category }
 	    end
 
 	    #
 	    # Get pages's ID part
 	    #
-	    #
 	    def get_page_id(page)
-	    	page.path.split("/").last.split(@@id_delimiter).first
+	    	return page.path.split("/").last.split(@@id_delimiter).first
 	    end
 
 	    #
 	    # Get how many levels in page id
 	    #
-			def page_id_length(page_id)
-				get_page_id(page_id).split(@@delimiter).length
+			def page_id_length(page)
+				return get_page_id(page).split(@@delimiter).length
 			end
 
 			#
 			# Get the first part of the page id
 			#
-			#
-			def group_of(page_id)
-				 get_page_id(page_id).split(@@delimiter).first
+			def group_of(page)
+				 return get_page_id(page).split(@@delimiter).first
 			end
 
 			# 
@@ -99,7 +107,7 @@ module Jekyll
 			# 
 			def get_subitems(pages, cur_page)
 				
-				pages.select{|page| 
+				return pages.select{|page| 
 					group_of(page) == group_of(cur_page) and
 					page_id_length(page) == page_id_length(cur_page) + 1 and
 					( get_page_id(page).casecmp get_page_id(cur_page) ) > 0 
@@ -110,23 +118,26 @@ module Jekyll
 
 			#
 			# Render menu
+			# 
+			# Recursively parse the pages tree and 
+			# generate nested HTML lists.
 			#
-			def render_menu(pages, page_ids)
+			def render_menu(pages, cur_pages)
 
 				html = ""
 
-				for i in 0..page_ids.length-1
+				for i in 0..cur_pages.length-1
 
-					subitems = get_subitems(pages, page_ids[i] );
+					subpages = get_subitems(pages, cur_pages[i] );
 
-					if subitems.length == 0 
-						html <<  %(<li><a href="#{page_ids[i].url}">#{page_ids[i].data["title"]}</a></li> )
+					if subpages.length == 0 
+						html <<  %(<li><a href="#{cur_pages[i].url}">#{cur_pages[i].data["title"]}</a></li> )
 					else
 						html << %(
 							<li>
-							<a href="#{page_ids[i].url}">#{page_ids[i].data["title"]}</a> 
+							<a href="#{cur_pages[i].url}">#{cur_pages[i].data["title"]}</a> 
 								<ul>
-									#{ render_menu(pages, subitems) }
+									#{ render_menu(pages, subpages) }
 								</ul>
 							</li> )
 					end
