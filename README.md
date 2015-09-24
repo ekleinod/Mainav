@@ -17,4 +17,3 @@ PLace liquid tag `{% page_navigation navclass %}` into your navigation area.
 
 Now to make pages nestable, add each page you want in menu to same category by inserting `category: "mycat"` 
 to each page's frontmatter and name your pages like this: `1-page, 1.1-some-subpage, 1.1.1-even-more-subpage ... etc`
-
