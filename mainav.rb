@@ -12,8 +12,6 @@
 #
 # 
 
-=end
-
 module Jekyll
 
   # Add accessor for directory
