@@ -6,6 +6,7 @@ module MaiNav
 class MaiNavPages
   
   attr_reader :current, :pages
+  attr_writer :current
 
   #""
   # Init Pages object and assign pages for internal work 

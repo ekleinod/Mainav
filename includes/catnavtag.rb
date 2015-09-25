@@ -21,7 +21,8 @@ class CatNavTag < Liquid::Tag
   @@delimiter = "."     # NOTE: level separator
   @@id_delimiter = "-"  # NOTE: level separator
 
-  @@t = ""
+  @@t = 0
+  @@pages = nil
   #
   # Initilize class
   #
@@ -57,15 +58,30 @@ class CatNavTag < Liquid::Tag
     
     #pages = pages_with_category(site.pages, (@category || current_page["category"]))
     
-    @pages = MaiNavPages.new(site.pages, current_page)
+    #
+    # test speed
+    if @@pages.nil?
+    	@@pages = MaiNavPages.new(site.pages, current_page)
+    end
+    @pages = @@pages
+    @pages.current = current_page;
 
-    if @pages.by_category(current_page["category"]).length != 0  # && @@t == ""
+    #if @@t.nil?
+    	@@t += 1  #site.pages
+    #elsif @@t == site.pages
+		#	print("Same pages are loaded each time!\n")
+		#end
 
-        @@t = "Running first type"
-        print "\t\t#{@@t}\n"
+    if @pages.by_category(current_page["category"]).length != 0
+
+        #print "\t\t#{@@t}\n"
 
       items = render_menu(@pages.by_category(current_page["category"]))
     end
+
+
+    #
+    #print "\n", @@t , ": #{current_page['path']}"
 
 
     return %( Refurbishing code: <ul class="#{(@classnames || "")}">#{items}</ul> )
@@ -94,15 +110,16 @@ class CatNavTag < Liquid::Tag
         MaiNavPages.by_level(pages, i).each{|page|
             # Find it's parent
               page.parent = @pages.find_parent_for(page)
-              print page.url, "\n" 
+              #print page.url, "\n" 
           }
 
       }
 
-      print "\n\n\t\t\t ***** \n\n"
+      #print "\n\n\t\t\t ***** \n\n"
 
       pages.each{|page|
-        print "Page #{page.name}: #{ !page.parent.nil? && page.parent.name }\n --------------------------- \n"
+        #print(" ");
+        #print "Page #{page.name}: #{ !page.parent.nil? && page.parent.name }\n --------------------------- \n"
       }
 
 
