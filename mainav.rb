@@ -5,7 +5,7 @@
 # even have them nesting.
 #
 # @author Aksel Meola <aksel@meola.eu>
-# @version 0.1
+# @version 0.1-refurbish
 # @date 24.09.15
 #
 # @licence: One of those it's free and don't sue licences. 
@@ -80,7 +80,7 @@ module Jekyll
         items = render_menu(pages, pages.select{|page| page_id_length( page ) == 1 } )
       end
 
-      return %( <ul class="#{(@classnames || "")}">#{items}</ul> )
+      return %( Refurbishing code: <ul class="#{(@classnames || "")}">#{items}</ul> )
 
     end
  
