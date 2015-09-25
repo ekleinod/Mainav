@@ -1,6 +1,6 @@
 # Mainav
 
-**NB!** - Readme needs updating, basic info given. Be noted that this project is still in it's early phase.
+**NB!** - Readme needs updating, basic info given. Be noted that this project is still in it's early phase. This is my very first Ruby project.
 
 Simple nesting navigation tag for Jekyll. 
 
