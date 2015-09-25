@@ -33,5 +33,18 @@ Class names for stylesheet.
         {% catnav class: "toc nav blue-box" %}    
 
 
+## Todo:
+ - [x] Create nested navigation out of pages in current category.
+ - [x] Allow category to be set in tag to generate menu on other pages.
+ - [ ] Add classes for CSS - current-menu-item, menu-item-has-children etc...
+ - [ ] Make an option to modify id-delimiter(-) and id-level delimiter (.) to be set by _config.
+ - [ ] Add an option to align and nest pages by frontmatter field so that filenames wouldn't have to be changed - `orde-by-fname`.
+ - [ ] Add a tag to generate main navigation.
+ - [ ] Add an option for `navigation: true/false` to include/exclude from main navigation. 
+ - [ ] Add nesting depth limit attribute for tag.
+ - [ ] Multible categories to enable multible categories menu - good for e.g table of contents.
+ - [ ] Add option to generate menu for specific page. For example `page: 'my-animals.md'`
+ 
 
 
+ 

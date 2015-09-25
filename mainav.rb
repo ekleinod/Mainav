@@ -11,14 +11,6 @@
 # @licence: One of those it's free and don't sue licences. 
 #
 # 
-=begin
-  
-  TODO:
-    
-    * Clean code, replace variable names with better ones
-    * Make delimiter and id delimiter load from config file
-    * Add classes to generated HTML for user styles
-    *
 
 =end
 
