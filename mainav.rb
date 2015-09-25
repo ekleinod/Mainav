@@ -15,6 +15,61 @@
 module Jekyll
 
 
+   # Add accessor for directory
+  class Page
+    
+    attr_reader :dir, :get_level, :parent, :level, :levels
+    attr_writer :parent
+
+    public
+  
+      ##
+      # Get page's level.
+      #
+      # If level is not set in page's frontmatter then try to extract 
+      # it from page's name.
+      #
+      # @returns  -   Pages outline level
+      #
+      def get_level
+        if self.data["level"].nil?
+          @name.split("-").first # NOTE: level separator
+        else
+          self.data["level"].to_s       
+        end
+      end
+
+      ##
+      # Get page's level length
+      #
+      # Split page's level and count levels count
+      #
+      # @returns  -   Page's level's length
+      #
+      def level
+        self.get_level.split(".").length # NOTE: level separator
+      end
+
+      ##
+      # Get page's levels as array
+      #
+      # Split page's level into sublevels
+      #
+      # @returns  -   Page's level's length
+      #
+      def levels
+        self.get_level.split(".") # NOTE: level separator
+      end
+
+      #
+      # Pages
+      #
+      #def parent=(page)
+      #  @parent = page
+      #end
+
+  end
+   
   module MaiNav
     
     #
@@ -22,12 +77,28 @@ module Jekyll
     #
     class MaiNavPages
       
+      attr_reader :current, :pages
+
+      #""
+      # Init Pages object and assign pages for internal work 
       #
-      # Init Pages object and assign
-      #
-      def initialize(site_pages)
+      def initialize(site_pages, current_page)
         @pages = site_pages
+        @current = current_page
+        
+        # Calculate deepest level
+        self.deepest_level
       end
+
+      ##
+      # Scan pages and find each pages parent and children.
+      #
+      #
+      def render_outline(pages)
+
+      end  
+
+
 
       public 
 
@@ -39,35 +110,85 @@ module Jekyll
         # @returns  - Pages in given category or [] if none found.
         #
         def by_category(category)
-            return @pages.select { |page|
-              !page.data["category"].nil? && page.data["category"] == category }
+          @pages.select { |page|
+            !page.data["category"].nil? && page.data["category"] == category }
         end
 
-        
-        # Class methods
-        # -------------
-        
+
         ##
-        # Return all pages on first level out of pages supplied 
+        # Get deepest level in set of pages
         #
-        # @param  - Pages from witch to get first level pages 
+        # @param  - List of pages to search from
         #
-        # @returns  -  Pages whose id has only one level: pages on first level.
-        # 
-        def MaiNavPages.first_level_pages(pages)
-          return pages.select{|page|
-              page.path.split("/").last.split("-").first.split(".").length == 1
+        # @returns  - Deepest level
+        #
+        def deepest_level
+          if @deepest_level.nil?
+            @deepest_level = 0
+            
+            @pages.each{|page|
+              if page.level > @deepest_level
+                @deepest_level = page.level
+              end  
             }
+            
+            @deepest_level
+          else
+            @deepest_level
+          end
         end
+        
+        #
+        # Find a parent for given page
+        #
+        def find_parent_for(spage)
+
+          parent = MaiNavPages.suggest_parent_for(spage)
+
+          @pages.each{|page|
+            if page.get_level == parent # && page.data['category'] == spage.data["parent"] # NOTE: category check must be done
+              return page
+            end
+          }
+
+          return nil
+
+        end
+
+        ##
+        # Get pages by level from given pages
+        # Page level is determined by 
+        #
+        # @param  - List of pages to select from
+        # @param  - What level pages to get
+        #
+        # @returns  - Pages on given lavel
+        #
+        def MaiNavPages.by_level(pages, level)
+          pages.select{|page|
+            page.level == level }
+        end
+
+        ##
+        # Get pages by level from given pages
+        # Page level is determined by 
+        #
+        # @param  - Page to seggest level string for
+        #
+        # @returns  - Suggested parent level
+        #
+        def MaiNavPages.suggest_parent_for(page)
+          if page.level > 1
+            page.levels.take(page.level-1).join(".") # NOTE: level separator
+          else
+            "top_level"
+          end
+        end
+
 
     end
 
-    # I THINK THIS ISN't NECESSARY
-    # Add accessor for directory
-    #class Page
-    #  attr_reader :dir, :naga
-    #end
-   
+
 
 
     #
@@ -89,9 +210,10 @@ module Jekyll
       #
       # Page delimiter
       #
-      @@delimiter = "."
-      @@id_delimiter = "-"
+      @@delimiter = "."     # NOTE: level separator
+      @@id_delimiter = "-"  # NOTE: level separator
 
+      @@t = ""
       #
       # Initilize class
       #
@@ -100,6 +222,7 @@ module Jekyll
    
         @classnames = nil
         @category   = nil
+
 
         # Scan for tag arguments
         args.scan(Liquid::TagAttributes) do |key, value|  
@@ -125,17 +248,18 @@ module Jekyll
         site = context.registers[:site]
         current_page = context.registers[:page]
         
-        pages = pages_with_category(site.pages, (@category || current_page["category"]))
+        #pages = pages_with_category(site.pages, (@category || current_page["category"]))
         
-        @pages = MaiNavPages.new(site.pages)
+        @pages = MaiNavPages.new(site.pages, current_page)
 
+        if @pages.by_category(current_page["category"]).length != 0 && @@t == ""
 
-        if pages.length != 0
-          items = render_menu( @pages.by_category(current_page["category"]) , MaiNavPages.first_level_pages(@pages.by_category(current_page["category"])) )
+            @@t = "Running first type"
+            print "\t\t#{@@t}\n"
+
+          items = render_menu(@pages.by_category(current_page["category"]))
         end
 
-        #current_page.naga('Kakajunn')
-        #print "Current page id: ", current_page.naga, "\n"
 
         return %( Refurbishing code: <ul class="#{(@classnames || "")}">#{items}</ul> )
 
@@ -146,86 +270,36 @@ module Jekyll
       private 
 
         #
-        # Get pages that are in the same category as the current page
-        #
-        # TODO: Make it search in categories also
-        def pages_with_category(pages, category)
-          return pages.select { |page|
-            !page.data["category"].nil? && page.data["category"] == category }
-        end
-
-        #
-        # Get pages's ID part
-        #
-        def get_page_id(page)
-          return page.path.split("/").last.split(@@id_delimiter).first
-        end
-
-        #
-        # Get how many levels in page id
-        #
-        def page_id_length(page)
-          return get_page_id(page).split(@@delimiter).length
-        end
-
-        #
-        # Get the first part of the page id
-        #
-        def group_of(page)
-           return get_page_id(page).split(@@delimiter).first
-        end
-
-        # 
-        # Get all pages that are a direct subpages of the current page.
-        #
-        # Page is a subpage if:
-        #  * Starts's with a same level/group number
-        #  * Has more levels in it's id
-        #  * ID is alphabetically after current page
-        # 
-        def get_subitems(pages, cur_page)
-          
-          return pages.select{|page| 
-            group_of(page) == group_of(cur_page) and
-            page_id_length(page) == page_id_length(cur_page) + 1 and
-            ( get_page_id(page).casecmp get_page_id(cur_page) ) > 0 
-          }   
-
-        end
-
-
-        #
         # Render menu
         # 
         # Recursively parse the pages tree and 
         # generate nested HTML lists.
         #
-        def render_menu(pages, cur_pages)
+        def render_menu(pages)
 
-          html = ""
+          # Find the deepest level 
+          level_range = @pages.deepest_level..0
 
-          for i in 0..cur_pages.length-1
+          #
+          # Loop aal page levels and find levels parent level page
+          (level_range.first).downto(level_range.last).each{|i|
 
-            subpages = get_subitems(pages, cur_pages[i] );
+            MaiNavPages.by_level(pages, i).each{|page|
+                # Find it's parent
+                  page.parent = @pages.find_parent_for(page)
+                  print page.url, "\n" 
+              }
 
-            if subpages.length == 0 
-              html <<  %(<li><a href="#{cur_pages[i].url}">#{cur_pages[i].data["title"]}</a></li> )
-            else
-              html << %(
-                <li>
-                <a href="#{cur_pages[i].url}">#{cur_pages[i].data["title"]}</a> 
-                  <ul>
-                    #{ render_menu(pages, subpages) }
-                  </ul>
-                </li> )
-            end
+          }
 
-          end
+          print "\n\n\t\t\t ***** \n\n"
 
-          return html
+          pages.each{|page|
+            print "Page #{page.url}: #{ page.parent.url || "top_level"}\n --------------------------- \n"
+          }
+
 
         end
-     
 
 
     end
