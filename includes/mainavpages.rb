@@ -20,10 +20,23 @@ class MaiNavPages
   end
 
   ##
-  # Scan pages and find each pages parent and children.
+  # Scan all pages starting from deepest level and working
+  # one's way up to the top level and assigning each page
+  # it's parent page.
   #
-  #
+  # @param 	-	Set of pages to outline
+  # 
+  # TODO: Render outline for all pages and then just use the data on each call to save computing power.
   def render_outline(pages)
+
+    # Find the deepest level 
+    level_range = self.deepest_level_of(pages)..0
+    # Sacan and assign parents
+		(level_range.first).downto(level_range.last).each{|i|
+      self.by_level(pages, i).each{|page|
+      	# Find it's parent
+        page.parent = @pages.find_parent_for(page) }
+    }
 
   end  
 
@@ -66,6 +79,7 @@ class MaiNavPages
         @deepest_level
       end
     end
+
     
     #
     # Find a parent for given page
@@ -109,6 +123,24 @@ class MaiNavPages
       else
         "top_level"
       end
+    end
+
+    ##
+    # Get deepest level in set of pages
+    #
+    # @param  - List of pages to search from
+    #
+    # @returns  - Deepest level
+    #
+    def MaiNavPages.deepest_level_of(pages)
+ 				deepest_level = 0
+
+        @pages.each{|page|
+          if page.level > deepest_level
+            deepest_level = page.level
+          end  
+        }        
+       @deepest_level
     end
 
 end

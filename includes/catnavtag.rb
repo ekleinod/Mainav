@@ -23,6 +23,7 @@ class CatNavTag < Liquid::Tag
 
   @@t = 0
   @@pages = nil
+  @@conf = nil
   #
   # Initilize class
   #
@@ -76,7 +77,8 @@ class CatNavTag < Liquid::Tag
 
         #print "\t\t#{@@t}\n"
 
-      items = render_menu(@pages.by_category(current_page["category"]))
+      #items = render_menu(@pages.by_category(current_page["category"]))
+      MaiNavPages.render_outline( @pages.by_category(current_page["category"]) )
     end
 
 
@@ -114,6 +116,9 @@ class CatNavTag < Liquid::Tag
           }
 
       }
+
+      print "------ conf ----------\n"
+      print @@conf.inspect
 
       #print "\n\n\t\t\t ***** \n\n"
 

@@ -1,5 +1,13 @@
 module Jekyll
 
+	class MaiNavConfig
+
+		attr_reader :conf
+
+		def initialize
+		end
+
+	end
 
    # Add accessor for directory
   class Page
