@@ -14,6 +14,9 @@ module Jekyll
     attr_reader :parent, :mcategory, :mlevel
     attr_writer :parent, :mcategory, :mlevel
 
+    #
+    # NOTE: This function is actually replaced by MCATEGORY property. Might not be needed anymore.
+    # 
     def in_category?(category)
       # Find out if page belongs into certain category.
       #
@@ -41,7 +44,7 @@ module Jekyll
       else
         # No category is specified 
         # TODO: Check if the parent directory thingy is feasible.
-        #
+        # 
         false
       end 
 

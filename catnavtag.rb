@@ -14,6 +14,8 @@ module MaiNav
         @category   = nil
 
         # Scan for tag arguments
+        #
+        # TODO: Implement all the attribute ideas.. 
         args.scan(Liquid::TagAttributes) do |key, value|  
           
           if key == "class"
@@ -27,7 +29,8 @@ module MaiNav
 
     def render(context)
       #
-      #
+      # TODO: Review this methods code.
+      # NOTE: Using class or instance variables might be benefit for speed. 
       #
       site = context.registers[:site]
       @cp = context.registers[:page]
@@ -60,6 +63,9 @@ module MaiNav
     end
 
     def render_html( cur_level, pages )
+      #
+      # TODO: Document and review this.
+      #
       html = ""
       ancestor = false
       
@@ -92,7 +98,7 @@ module MaiNav
               #{subhtml}
               </li> )
       }
-      return html, ancestor
+      return html, ancestor # That's really neat thing about Ruby!
     end
 
 
