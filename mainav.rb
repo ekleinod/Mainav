@@ -46,6 +46,11 @@ module MaiNav
   LEVEL_SEPARATOR = "-" # NOTE: Level separator constant
 
   #
+  # Ignore level attribute in pages
+  #
+  IGNORE_LEVEL 	= true
+
+  #
   # Utility functions for various stuff
   #
   class Utils
@@ -85,7 +90,7 @@ module MaiNav
       #
 
       # Is level atribute set 
-      if page.data["level"].nil?
+      if page.data["level"].nil? || IGNORE_LEVEL == true
         # Is level pattern in file name ?
         if ( /^.+?[#{LEVEL_SEPARATOR}]/ =~ page.name ).nil?
           # Make levels out of directory structure

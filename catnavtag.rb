@@ -36,7 +36,8 @@ module MaiNav
       @cp = context.registers[:page]
 
       pages = site.pages.select{|page|
-        page.mcategory == @cp["category"] && (page.html? || page.index?)
+      	page.mcategory == "juhend"
+        #page.mcategory == @cp["category"] && (page.html? || page.index?)
       }
       #
       # Find top level pages
@@ -93,7 +94,7 @@ module MaiNav
           subhtml = %(<ul>#{subhtml}</ul>)
         end
 
-        html << %(<li class="#{classes}" > 
+        html << %(<li class="#{classes}" >
               <a href="#{page.url}"> #{page.data["title"]} </a> 
               #{subhtml}
               </li> )
