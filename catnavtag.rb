@@ -12,16 +12,35 @@ module MaiNav
 
         @classnames = nil
         @category   = nil
+        @depth			= nil
+        @id					= nil
 
         # Scan for tag arguments
         #
         # TODO: Implement all the attribute ideas.. 
         args.scan(Liquid::TagAttributes) do |key, value|  
-          
-          if key == "class"
-            @classnames = value.tr("\"'", "");
+          #
+          # Id for UL element
+          if key == "id"
+            @id = value.tr("\"'", "")
           end
-            
+ 					#
+ 					# Classes for styling UL element
+          if key == "class"
+            @classnames = value.tr("\"'", "")
+          end
+          #
+          # Navigation depth  
+          if key == "depth"
+            @depth = value.tr("\"'", "").to_i
+          end
+          #
+          # Category to generate navigation for
+          # TODO: Create a loop to generate navigation for all of the categories if multible specified  
+          if key == "category"
+            @category = value.tr("\"'", "")
+          end
+
         end
 
     end
@@ -36,15 +55,16 @@ module MaiNav
       @cp = context.registers[:page]
 
       pages = site.pages.select{|page|
-      	page.mcategory == "juhend"
+      	page.mcategory == @category
         #page.mcategory == @cp["category"] && (page.html? || page.index?)
       }
+
       #
       # Find top level pages
-      top_level = pages.first.data["level"].split(MaiNav::LEVEL_DELIMITER).length
+      top_level = pages.first.mlevel.split(MaiNav::LEVEL_DELIMITER).length
  
       pages.each do |page|
-        l = page.data["level"].split(MaiNav::LEVEL_DELIMITER).length
+        l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
         if l < top_level
           top_level = l
         end
@@ -52,31 +72,51 @@ module MaiNav
 
       ptmp = []
       pages.each do |page|
-        l = page.data["level"].split(MaiNav::LEVEL_DELIMITER).length
+        l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
         if l == top_level
           ptmp << page
         end
       end
 
-      items, ancestor = render_html( ptmp, pages )
+      items, ancestor = render_html( ptmp, pages, 0 )
 
-      %(<ul> #{items} </ul>)
+      %(<ul id="#{@id || "" }" class="#{@classnames || "" }"> 
+      		#{items} </ul>)
+
     end
 
-    def render_html( cur_level, pages )
+    def render_html( cur_level, pages, depth )
       #
       # TODO: Document and review this.
       #
       html = ""
       ancestor = false
-      
+
+      #
+      # Check if depth limit is set and have we met it ?
+      #
+      if !@depth.nil? && depth >= @depth
+      	return html, ancestor
+      end
+
+      #
+      # If IGNORE_LEVEL is set to true then we assume that level 
+      # attribute is used for aligning items only. 
+      #
+      # So ve sort the current set of pages by pages level attribute.
+      if MaiNav::IGNORE_LEVEL == true
+      	cur_level.sort!{|a,b| 
+      		a.data["level"].to_s <=> b.data["level"].to_s }
+      end	
+
       cur_level.each{|page|
 
         subhtml, subancestor = render_html(
             pages.select{ |spage|
               spage.parent == page
             },
-            pages
+            pages,
+            depth + 1
           )
 
         if @cp["url"] == page.url

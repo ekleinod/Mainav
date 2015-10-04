@@ -90,18 +90,18 @@ module MaiNav
       #
 
       # Is level atribute set 
-      if page.data["level"].nil? || IGNORE_LEVEL == true
+      if page.data["level"].nil? || MaiNav::IGNORE_LEVEL == true
         # Is level pattern in file name ?
         if ( /^.+?[#{LEVEL_SEPARATOR}]/ =~ page.name ).nil?
           # Make levels out of directory structure
-          page.data["level"] = page.dir.split("/").drop(1).join(LEVEL_DELIMITER)
+          page.mlevel = page.dir.split("/").drop(1).join(LEVEL_DELIMITER)
         else
-          page.data["level"] = page.name.split(LEVEL_SEPARATOR).first
+          page.mlevel = page.name.split(LEVEL_SEPARATOR).first
         end  
       else
         #
         # Convert to string incase 1.1, 1.2 ... detected as a float.
-        page.data["level"] = page.data["level"].to_s 
+        page.mlevel = page.data["level"].to_s 
       end  
     end
 
@@ -145,15 +145,15 @@ module MaiNav
       end
       #
       # 1. Check if page is allready on top level
-      if page.data["level"].split(LEVEL_DELIMITER).length > 1
+      if page.mlevel.split(LEVEL_DELIMITER).length > 1
         #
         # 2. Get upper level page
-        levels = page.data["level"].split(LEVEL_DELIMITER)
+        levels = page.mlevel.split(LEVEL_DELIMITER)
         upper_level = levels.take(levels.length - 1).join(LEVEL_DELIMITER)
         #
         # Now find a page that has this upperlevel as a level
         pages.each do |p|    
-          if p.data["level"].to_s == upper_level.to_s && self.cats_match?(p, page) # TODO: Check if categories match
+          if p.mlevel.to_s == upper_level.to_s && self.cats_match?(p, page) # TODO: Check if categories match
             page.parent = p
             break
           end
