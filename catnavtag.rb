@@ -135,7 +135,7 @@ module MaiNav
         end
 
         html << %(<li class="#{classes}" >
-              <a href="#{page.url}"> #{page.data["title"]} </a> 
+              <a href="#{page.url}"> #{page.data["navtitle"] || page.data["title"]} </a> 
               #{subhtml}
               </li> )
       }

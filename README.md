@@ -34,7 +34,7 @@ Copy all `.rb` files to your Jekyll site's `_plugins` directory. If directory do
 
 Level is the way MaiNav decides how the pages should be aligned and nested. 
 Level can be defined by different ways: 
-(** In future that can be set in _config.yml - right now MaiNav checks for level attribute in frontmatter, then file name and then uses page path. **)
+(**In future that can be set in _config.yml - right now MaiNav checks for level attribute in frontmatter, then file name and then uses page path.**)
  
  - By `level` attribute in pages frontmatter:
 
