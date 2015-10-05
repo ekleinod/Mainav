@@ -81,6 +81,7 @@ Optionally pages in same directory can be ordered by setting the level attribute
 
  - level - Page nesting level attribute. If level attribute is ignored or unset then nesting is based on destination directory path. If `ignore_level` option is set true level is used to align pages in specific order. 
  - category/categories - Category or categories for the page (Jekyll stuff)
+ - navtitle - When set this is shown as a link title in navigation.
 
 ### Liquid tag: catnav
 
