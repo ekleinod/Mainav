@@ -20,7 +20,8 @@ Purpose: All your navigation needs in Jekyll!
  - [ ] Field for navigation title
  - [ ] Support for post archive navigations
  - [ ] Next, previous and parent page link tags. 
-  
+ - [ ] Option to make list items with sub items not display as links(for accordion menus).
+ 
 
 
 

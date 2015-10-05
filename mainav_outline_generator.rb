@@ -13,7 +13,7 @@ module Jekyll
         site.pages.each{|page| 
             # 
             # Find page category           
-            MaiNav::Utils.set_category(page) 
+            MaiNav::Utils.set_category(page)
             #
             # Find page level
             MaiNav::Utils.set_level(page) 

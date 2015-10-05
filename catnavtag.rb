@@ -12,8 +12,10 @@ module MaiNav
 
         @classnames = nil
         @category   = nil
+				@all_categories = false
         @depth			= nil
         @id					= nil
+
 
         # Scan for tag arguments
         #
@@ -40,6 +42,11 @@ module MaiNav
           if key == "category"
             @category = value.tr("\"'", "")
           end
+          #
+          # 
+          if key == "all-categories"
+            @all_categories = true
+          end
 
         end
 
@@ -54,22 +61,44 @@ module MaiNav
       site = context.registers[:site]
       @cp = context.registers[:page]
 
-      pages = site.pages.select{|page|
-      	page.mcategory == @category
-        #page.mcategory == @cp["category"] && (page.html? || page.index?)
-      }
-
+      if @category.nil?  && @all_categories == false
+      # Get pages in current pages category 
+      #
+      # TODO: Write a method that check's current pages category 
+      # Utils::set_category should do.. but not sure now..
+      #
+      	pages = []
+      elsif @all_categories == true 
+	    # Get all pages 
+	      pages = site.pages.select{|page|
+	      	page.html? || page.index?
+	      }      	
+      else
+      # Get given category pages 	
+	      pages = site.pages.select{|page|
+	      	page.mcategory == @category
+	      }
+      end
+      #
+      # Check if pages found ?
+      #
+      if pages.length == 0
+      	return ""
+      end
+      #
       #
       # Find top level pages
       top_level = pages.first.mlevel.split(MaiNav::LEVEL_DELIMITER).length
- 
+ 			#
+      #
       pages.each do |page|
         l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
         if l < top_level
           top_level = l
         end
       end
-
+      #
+      #
       ptmp = []
       pages.each do |page|
         l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
@@ -77,7 +106,7 @@ module MaiNav
           ptmp << page
         end
       end
-
+      #
       items, ancestor = render_html( ptmp, pages, 0 )
 
       %(<ul id="#{@id || "" }" class="#{@classnames || "" }"> 
