@@ -12,7 +12,7 @@ module MaiNav
 
         @classnames = nil
         @category   = nil
-				@all_categories = false
+				@allpages = false
         @depth			= nil
         @id					= nil
 
@@ -44,8 +44,12 @@ module MaiNav
           end
           #
           # 
-          if key == "all-categories"
-            @all_categories = true
+          if key == "allpages"
+          	if value == "true"
+            	@allpages = true
+            else
+            	@allpages = false            
+            end	
           end
 
         end
@@ -68,7 +72,7 @@ module MaiNav
       # Utils::set_category should do.. but not sure now..
       #
       	pages = []
-      elsif @all_categories == true 
+      elsif @allpages == true 
 	    # Get all pages 
 	      pages = site.pages.select{|page|
 	      	page.html? || page.index?
