@@ -11,43 +11,23 @@ module Jekyll
     #
     # Holds link to page's parent page.
     #
-    attr_reader :parent, :mcategory, :mlevel
-    attr_writer :parent, :mcategory, :mlevel
+    attr_reader :parent, :categories, :mlevel
+    attr_writer :parent, :categories, :mlevel
 
-    #
-    # NOTE: This function is actually replaced by MCATEGORY property. Might not be needed anymore.
-    # 
+
     def in_category?(category)
-      # Find out if page belongs into certain category.
+      # Find out if page belongs into given category.
+      # NOTE: mcategory is used for categories. 
       #
-      # @param  - Page whose categories to search from.
       # @param  - Category to check against.
       # @returns  - Boolean true/false
       #
-      if !self.data["category"].nil?
-        return category == self.data["category"]
-      
-      elsif !self.data["categories"].nil?
-        # Are categories feed to me as array 
-        if self.data["categories"].kind_of?(Array) 
-          cats = self.data["categories"]
-        else
-          cats = self.data["categories"].split(" ")          
-        end  
-        cats.each do |cat|
-          if cat == category 
-            return true
-          end  
-        end
-        return false         
-      
-      else
-        # No category is specified 
-        # TODO: Check if the parent directory thingy is feasible.
-        # 
-        false
-      end 
-
+      self.categories.each do |selfcat|
+      	if selfcat == category
+      		return true
+      	end	
+      end
+      return false
     end
 
 

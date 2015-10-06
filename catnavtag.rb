@@ -11,10 +11,10 @@ module MaiNav
         super
 
         @classnames = nil
-        @category   = nil
-				@allpages = false
-        @depth			= nil
-        @id					= nil
+        @categories = nil
+        @allpages   = false
+        @depth      = nil
+        @id         = nil
 
 
         # Scan for tag arguments
@@ -26,8 +26,8 @@ module MaiNav
           if key == "id"
             @id = value.tr("\"'", "")
           end
- 					#
- 					# Classes for styling UL element
+          #
+          # Classes for styling UL element
           if key == "class"
             @classnames = value.tr("\"'", "")
           end
@@ -38,18 +38,18 @@ module MaiNav
           end
           #
           # Category to generate navigation for
-          # TODO: Create a loop to generate navigation for all of the categories if multible specified  
-          if key == "category"
-            @category = value.tr("\"'", "")
+          # Multible categories are allowed
+          if key == "categories"
+            @categories = value.tr("\"'", "").split(" ")
           end
           #
           # 
           if key == "allpages"
-          	if value == "true"
-            	@allpages = true
+            if value == "true"
+              @allpages = true
             else
-            	@allpages = false            
-            end	
+              @allpages = false            
+            end 
           end
 
         end
@@ -65,35 +65,36 @@ module MaiNav
       site = context.registers[:site]
       @cp = context.registers[:page]
 
-      if @category.nil?  && @all_categories == false
-      # Get pages in current pages category 
+      print "Categories: ",@categories, "\n"
       #
-      # TODO: Write a method that check's current pages category 
-      # Utils::set_category should do.. but not sure now..
-      #
-      	pages = []
-      elsif @allpages == true 
-	    # Get all pages 
-	      pages = site.pages.select{|page|
-	      	page.html? || page.index?
-	      }      	
+      # If category is not specified
+      if @categories.nil?
+        # TODO: Write the all pages code and current page's category
+        pages = []
+        print "No category specified\n"
       else
-      # Get given category pages 	
-	      pages = site.pages.select{|page|
-	      	page.mcategory == @category
-	      }
+        print "Getting pages in categories: #{@categories}\n"
+        pages = Utils::pages_by_categories(site.pages, @categories);
       end
+
+      pages.each do |page|
+        print page.dir, "\n"
+      end
+
+      return ""
+
       #
       # Check if pages found ?
       #
       if pages.length == 0
-      	return ""
+        print "No pages \n"
+        return ""
       end
       #
       #
       # Find top level pages
       top_level = pages.first.mlevel.split(MaiNav::LEVEL_DELIMITER).length
- 			#
+      #
       #
       pages.each do |page|
         l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
@@ -114,7 +115,7 @@ module MaiNav
       items, ancestor = render_html( ptmp, pages, 0 )
 
       %(<ul id="#{@id || "" }" class="#{@classnames || "" }"> 
-      		#{items} </ul>)
+          #{items} </ul>)
 
     end
 
@@ -129,7 +130,7 @@ module MaiNav
       # Check if depth limit is set and have we met it ?
       #
       if !@depth.nil? && depth >= @depth
-      	return html, ancestor
+        return html, ancestor
       end
 
       #
@@ -138,9 +139,9 @@ module MaiNav
       #
       # So ve sort the current set of pages by pages level attribute.
       if MaiNav::IGNORE_LEVEL == true
-      	cur_level.sort!{|a,b| 
-      		a.data["level"].to_s <=> b.data["level"].to_s }
-      end	
+        cur_level.sort!{|a,b| 
+          a.data["level"].to_s <=> b.data["level"].to_s }
+      end 
 
       cur_level.each{|page|
 

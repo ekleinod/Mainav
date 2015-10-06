@@ -48,37 +48,60 @@ module MaiNav
   #
   # Ignore level attribute in pages
   #
-  IGNORE_LEVEL 	= true
+  IGNORE_LEVEL  = true
 
   #
   # Utility functions for various stuff
   #
   class Utils
 
+    def self.page_categories(page)
+      # Return the categories set in category or categories 
+      # frontmatter of the page.
+      #
+      # @returns - Array of categories 
+      #
+      categories = []
+      # Is category set ?
+      if page.data["category"].nil?
+        # Is categories set then ?
+        if !page.data["categories"].nil?
+          # Ok, is it array or string ?
+          if page.data["categories"].kind_of?(Array)
+            # Just get the array
+            categories = page.data["categories"]
+          else
+            # Trim string for quotes and split by spaces.
+            categories = page.data["categories"].tr("\"'", "").split(" ") 
+          end  
+        end  
+      else
+        categories << page.data["category"]
+      end
+      return categories
+    end 
+
+    def self.pages_by_categories(pages, category)
+      # Get pages by given  categories. 
+      # NOTE: categories array is used for categories.
+      #
+      # @param -  Pages to select from.
+      # @param -  Category whose pages to get.
+      #
+      # @returns -  Array of pages in given category.
+      #
+      pages.select{|page|
+        page.in_category?(category)
+      }
+    end
+
+
     def self.cats_match?(page1, page2)
       #
       # See if page 1 and page 2 share categories
       #
 
-      if page1.mcategory.kind_of?(Array)
-        cats1 = page1.mcategory
-      else  
-        cats1 = page1.mcategory.split(" ")
-      end
-
-      if page2.mcategory.kind_of?(Array)
-        cats2 = page2.mcategory
-      else  
-        cats2 = page2.mcategory.split(" ")
-      end
-      
-      cats1.each do |cat1|
-        cats2.each do |cat2|
-          if cat1 == cat2 
-            return true
-          end
-        end
-      end
+     
       return false
     end
 
@@ -100,36 +123,24 @@ module MaiNav
         end  
       else
         #
-        # Convert to string incase 1.1, 1.2 ... detected as a float.
+        # Convert to string incase 1.1, 1.2 ... are detected as a float.
         page.mlevel = page.data["level"].to_s 
       end  
     end
 
 
-    def self.set_category(page)
-      # NOTE: (LIST)
-      # Categories must be checked first in pages CATEGORY or CATEGORIES attribute
-      # and then fall back to the directory structure where directory's name becomes 
-      # the category. Some investigation has to be done before we can go with that route
-      # safely. 
+    def self.set_categories(page)
+      # Set the pages patched categories attribute based on category or categories
+      # frontmatter. If those are not set then use a destination directories base
+      # dir as a category. 
       #
-      # First idea comes into mind to use the first directory in path as a category so that
-      # all subdirectories would automatically fall into same category. That might be a wrong
-      # assumption.
+      # @param -  Page whose categories attribute is to be set.
+      #      
+      page.categories = self.page_categories(page)
       #
-      # Here's a first implementation for CATEGORY
-      # TODO: Make it search in categories also
-      #
-      # Has Category been set ?
-      if page.data["category"].nil?
-        # Do categories exist perhaps ?
-        if page.data["categories"].nil?
-          page.mcategory = page.dir.split("/").at(1) || page.dir.split("/").first
-        else
-          page.mcategory = page.data["categories"]
-        end
-      else
-        page.mcategory = page.data["category"]  
+      # No categories set - use destination directory's base as a category.
+      if page.categories.length == 0
+        page.categories << page.dir.split("/").at(1) || "TOPLEVEL"
       end  
     end
 
@@ -159,34 +170,6 @@ module MaiNav
           end
         end
       end 
-
-    end
-
-
-    def self.level?(page)
-      #
-      # Check if level is set on page. 
-      #
-      # @param  - Page to check
-      #
-      # @returns  -  True if LEVEL attribute is set or filename has level pattern.
-      #
-
-      # Check for level pattern in file name 
-      if ( pattern = /^.+?[#{ID_SEPARATOR}]/ =~ page.name ).nil?
-        # Is a level attribute set
-        if page.data["level"].nil?
-          #
-          # TODO: What else can we take into account as a level - directory perhaps ?
-          #
-          return false
-        else
-          return true
-        end
-
-      else
-        return true
-      end  
 
     end
 

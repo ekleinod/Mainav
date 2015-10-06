@@ -1,5 +1,7 @@
 # Mainav - code refurbish
 
+MaiNav is a plugin that tries to figure out pages relations to each other and assigns each page it's parent page etc.. With that information(hopefully right) it can then generate navigation menus, breadcrums, links to next and previous pages ans so on. 
+
 **NB!** - Be noted that this project is still in it's early phase.
 
 Purpose: All your navigation needs in Jekyll!
@@ -94,7 +96,7 @@ Example
  
  - class: - Containing UL element class name/names. 
  - id: - ID for the UL element.
- - category: Category name to generate the navigation for. By default current page's category is used. 
+ - categories: Category or set of categories to generate the navigation for. By default current page's category is used. 
  - depth: How many levels deep to generate the navigation. By default infinite depth is used. 
  
 
