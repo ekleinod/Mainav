@@ -9,9 +9,11 @@ Purpose: All your navigation needs in Jekyll!
 ## Features TODO:
 
  - [x] Nested lists based on category.
- - [ ] Nested lists per multible categories
+ - [x] Nested lists per multible categories
+ - [ ] Nested list based on cuurent pages's category
  - [ ] Nested list based on path
  - [x] Nested list based on path structure.
+ - [x] Nesting depth limiting attribute
  - [x] Classnames for current page, ancestors, has-children. 
  - [x] Generating depth support
  - [ ] Table of contents per page
@@ -22,9 +24,16 @@ Purpose: All your navigation needs in Jekyll!
  - [ ] Field for navigation title
  - [ ] Support for post archive navigations
  - [ ] Next, previous and parent page link tags. 
- - [ ] Option to make list items with sub items not display as links(for accordion menus).
  
+ ---
 
+ - [ ] Option to make list items with sub items not display as links(for accordion menus. This would look nicer too if CSS is disabled. ).
+ 
+## Future changes
+
+ - [ ] Probaly the file name pattern is up for exclusin, because it seems to have no good usage over folder structure and `level` attribute. It also ends up in final pages's names and making a mechanism to exclude the level from final file path seems too mutch overhead for such a whiny little feature. The product of overthinking I guess.
+
+ - [ ] Tag name `catnav` needs to be changed to someting in line of it's purpose. Candidates `pagenav`. 
 
 
 ## Install

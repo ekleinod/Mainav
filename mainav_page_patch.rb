@@ -15,22 +15,6 @@ module Jekyll
     attr_writer :parent, :categories, :mlevel
 
 
-    def in_category?(category)
-      # Find out if page belongs into given category.
-      # NOTE: mcategory is used for categories. 
-      #
-      # @param  - Category to check against.
-      # @returns  - Boolean true/false
-      #
-      self.categories.each do |selfcat|
-      	if selfcat == category
-      		return true
-      	end	
-      end
-      return false
-    end
-
-
   end
    
 end

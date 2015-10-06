@@ -46,9 +46,9 @@ module MaiNav
   LEVEL_SEPARATOR = "-" # NOTE: Level separator constant
 
   #
-  # Ignore level attribute in pages
-  #
-  IGNORE_LEVEL  = true
+  # Ignore level attribute in pages and use 
+  # it just for aligning same level pages.
+  IGNORE_LEVEL    = true
 
   #
   # Utility functions for various stuff
@@ -81,30 +81,21 @@ module MaiNav
       return categories
     end 
 
-    def self.pages_by_categories(pages, category)
+    def self.pages_by_categories(pages, categories)
       # Get pages by given  categories. 
       # NOTE: categories array is used for categories.
       #
       # @param -  Pages to select from.
       # @param -  Category whose pages to get.
       #
-      # @returns -  Array of pages in given category.
+      # @returns -  Array of pages in given categories.
       #
       pages.select{|page|
-        page.in_category?(category)
+        # Check if any of the elements in both arrys match
+        # Another cool Ruby trick.
+        !(page.categories & categories).empty?
       }
     end
-
-
-    def self.cats_match?(page1, page2)
-      #
-      # See if page 1 and page 2 share categories
-      #
-
-     
-      return false
-    end
-
 
     def self.set_level(page)
       #
@@ -155,18 +146,19 @@ module MaiNav
         return false
       end
       #
-      # 1. Check if page is allready on top level
+      # Check if page is allready on top level
       if page.mlevel.split(LEVEL_DELIMITER).length > 1
         #
-        # 2. Get upper level page
+        # No - get upper level page
         levels = page.mlevel.split(LEVEL_DELIMITER)
         upper_level = levels.take(levels.length - 1).join(LEVEL_DELIMITER)
         #
-        # Now find a page that has this upperlevel as a level
+        # Now find a page in same category and has this upperlevel as a level
         pages.each do |p|    
-          if p.mlevel.to_s == upper_level.to_s && self.cats_match?(p, page) # TODO: Check if categories match
+          # TODO: Cleanup. See if .to_s is still necessary. This should be dealth with in set_level() method.
+          if p.mlevel.to_s == upper_level.to_s && !(p.categories & page.categories ).empty?
             page.parent = p
-            break
+            return true
           end
         end
       end 

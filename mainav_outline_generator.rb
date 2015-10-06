@@ -22,7 +22,7 @@ module Jekyll
         # NOTE: This sorts the whole site.pages array.
         # TODO: See why set_parent only works correctly on sorted array.
         #
-        site.pages.sort!{|a,b| a.mlevel.to_s <=> b.mlevel.to_s }
+        site.pages.sort!{|a,b| a.mlevel.to_s <=> b.mlevel.to_s } # TODO: see if to_s is still necessary
         #
         # Assign a parent for each page item  
         site.pages.each{|page|          

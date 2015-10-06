@@ -4,6 +4,11 @@ module MaiNav
 
     TAG_NAME = 'catnav'
 
+    #
+    # Holds all the valid pages for each rendering.
+    # Should save some time on each run
+    @@pages   = nil
+
     def initialize(tag_name, args, tokens)
       #
       #
@@ -62,32 +67,36 @@ module MaiNav
       # TODO: Review this methods code.
       # NOTE: Using class or instance variables might be benefit for speed. 
       #
-      site = context.registers[:site]
+      # Check if pages have allready been fetched and seva some time on each rendering.
+      if @@pages.nil?
+        site = context.registers[:site]
+        #
+        # get valid pages for navigation
+        @@pages = site.pages.select{|page| 
+          page.html? || page.index?
+        }
+      end
+      #
+      # Current page for rendering current item class 
+      # and current pages's category
       @cp = context.registers[:page]
 
-      print "Categories: ",@categories, "\n"
       #
       # If category is not specified
+      pages = []
       if @categories.nil?
-        # TODO: Write the all pages code and current page's category
-        pages = []
-        print "No category specified\n"
+        # TODO: Write the all pages code and current page's category code
+        print "No category specified!\n"
       else
-        print "Getting pages in categories: #{@categories}\n"
-        pages = Utils::pages_by_categories(site.pages, @categories);
+        # Get pages in given category/categories
+        #print "Getting pages in categories: #{@categories.join(", ")}\n"
+        pages = Utils::pages_by_categories( @@pages , @categories);
       end
-
-      pages.each do |page|
-        print page.dir, "\n"
-      end
-
-      return ""
 
       #
       # Check if pages found ?
       #
       if pages.length == 0
-        print "No pages \n"
         return ""
       end
       #
