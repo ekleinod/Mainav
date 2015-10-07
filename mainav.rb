@@ -99,19 +99,14 @@ module MaiNav
 
     def self.set_level(page)
       #
-      # Set pages level attribute 
+      # Set pages mlevel attribute 
       #
       #
-
       # Is level atribute set 
       if page.data["level"].nil? || MaiNav::IGNORE_LEVEL == true
-        # Is level pattern in file name ?
-        if ( /^.+?[#{LEVEL_SEPARATOR}]/ =~ page.name ).nil?
-          # Make levels out of directory structure
-          page.mlevel = page.dir.split("/").drop(1).join(LEVEL_DELIMITER)
-        else
-          page.mlevel = page.name.split(LEVEL_SEPARATOR).first
-        end  
+        # Make levels out of directory structure
+        #page.mlevel = page.dir.split("/").drop(1).join(LEVEL_DELIMITER)
+        page.mlevel = "top" + page.dir.split("/").join(LEVEL_DELIMITER)
       else
         #
         # Convert to string incase 1.1, 1.2 ... are detected as a float.
@@ -131,7 +126,7 @@ module MaiNav
       #
       # No categories set - use destination directory's base as a category.
       if page.categories.length == 0
-        page.categories << page.dir.split("/").at(1) || "TOPLEVEL"
+        page.categories << page.dir.split("/").at(1) || "nil" #NOTE: nil signifies a top level page
       end  
     end
 

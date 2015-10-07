@@ -27,6 +27,7 @@ module Jekyll
         # Assign a parent for each page item  
         site.pages.each{|page|          
           MaiNav::Utils.set_parent(site.pages, page)  
+         	print "Parent: #{page.parent.nil?} - #{page.dir}\n"
          }        
 
       end

@@ -8,6 +8,7 @@ module MaiNav
     # Holds all the valid pages for each rendering.
     # Should save some time on each run
     @@pages   = nil
+    @@categories = [];
 
     def initialize(tag_name, args, tokens)
       #
@@ -17,7 +18,6 @@ module MaiNav
 
         @classnames = nil
         @categories = nil
-        @allpages   = false
         @depth      = nil
         @id         = nil
 
@@ -47,15 +47,6 @@ module MaiNav
           if key == "categories"
             @categories = value.tr("\"'", "").split(" ")
           end
-          #
-          # 
-          if key == "allpages"
-            if value == "true"
-              @allpages = true
-            else
-              @allpages = false            
-            end 
-          end
 
         end
 
@@ -75,22 +66,39 @@ module MaiNav
         @@pages = site.pages.select{|page| 
           page.html? || page.index?
         }
+        #
+        # Get all available categories
+        # TODO: This is very inefficent piece of monkey doodoo
+        @@pages.each{|page|
+        		@@categories += page.categories
+        }
+        @@categories.uniq!
       end
+
+
       #
       # Current page for rendering current item class 
       # and current pages's category
-      @cp = context.registers[:page]
+      cp = context.registers[:page]
+      # Get current pages's Page object
+     	@cp = @@pages.select {|page|  
+     		page.path == cp["path"]
+     	}.first  
 
       #
       # If category is not specified
       pages = []
       if @categories.nil?
-        # TODO: Write the all pages code and current page's category code
-        print "No category specified!\n"
+        pages = Utils::pages_by_categories( @@pages , @cp.categories);
       else
         # Get pages in given category/categories
-        #print "Getting pages in categories: #{@categories.join(", ")}\n"
-        pages = Utils::pages_by_categories( @@pages , @categories);
+        if @categories.include?("*")
+        	# All categories selected	
+        	pages = Utils::pages_by_categories( @@pages , @@categories);
+        else
+        	# Some categories selected
+        	pages = Utils::pages_by_categories( @@pages , @categories);
+      	end
       end
 
       #
@@ -99,29 +107,19 @@ module MaiNav
       if pages.length == 0
         return ""
       end
+
+
       #
+      # Find the top level pages to start generating the HTML
       #
-      # Find top level pages
-      top_level = pages.first.mlevel.split(MaiNav::LEVEL_DELIMITER).length
-      #
-      #
-      pages.each do |page|
-        l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
-        if l < top_level
-          top_level = l
-        end
-      end
-      #
-      #
-      ptmp = []
-      pages.each do |page|
-        l = page.mlevel.split(MaiNav::LEVEL_DELIMITER).length
-        if l == top_level
-          ptmp << page
-        end
-      end
-      #
-      items, ancestor = render_html( ptmp, pages, 0 )
+   		# For the time being we assume all top level pages have their parent as nil.
+     	#
+     	# NOTE: Page parent is probaly not nil when fenerating for subpath.
+      top_level_pages = pages.select{|page|
+      	page.parent.nil?
+      }
+ 
+      items, ancestor = render_html(top_level_pages, pages, 0)
 
       %(<ul id="#{@id || "" }" class="#{@classnames || "" }"> 
           #{items} </ul>)
@@ -162,7 +160,7 @@ module MaiNav
             depth + 1
           )
 
-        if @cp["url"] == page.url
+        if @cp.url == page.url
           ancestor = true
           classes = "current-item"
         elsif subancestor == true
