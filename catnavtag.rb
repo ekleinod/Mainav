@@ -33,7 +33,7 @@ module MaiNav
           end
           #
           # Classes for styling UL element
-          if key == "class"
+          if key == "classes"
             @classnames = value.tr("\"'", "")
           end
           #
@@ -74,7 +74,6 @@ module MaiNav
         }
         @@categories.uniq!
       end
-
 
       #
       # Current page for rendering current item class 
