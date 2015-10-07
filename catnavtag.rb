@@ -150,8 +150,11 @@ module MaiNav
           a.data["level"].to_s <=> b.data["level"].to_s }
       end 
 
+      #
+      # Loop over all pages and render HTML markup.
       cur_level.each{|page|
-
+	      #
+	      # Get current pages's children
         subhtml, subancestor = render_html(
             pages.select{ |spage|
               spage.parent == page
@@ -159,23 +162,26 @@ module MaiNav
             pages,
             depth + 1
           )
-
+        
+        #
+        # Find CSS classes for current item
+        classes = []
         if @cp.url == page.url
           ancestor = true
-          classes = "current-item"
+          classes << "current-item"
         elsif subancestor == true
           ancestor = true
-          classes = "current-item-ancestor"
-        else
-          classes = ""              
+          classes << "current-item-ancestor"
         end
 
         if subhtml.length > 0
-          classes << " item-has-children"
+          classes << "item-has-children"
           subhtml = %(<ul>#{subhtml}</ul>)
         end
 
-        html << %(<li class="#{classes}" >
+        #
+        # Render the LI element
+        html << %(<li class="#{classes.join(" ")}" >
               <a href="#{page.url}"> #{page.data["navtitle"] || page.data["title"]} </a> 
               #{subhtml}
               </li> )
