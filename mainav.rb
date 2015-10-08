@@ -43,7 +43,6 @@ Liquid::Template.register_tag( MaiNav::MaiCrumsTag::TAG_NAME, MaiNav::MaiCrumsTa
 module MaiNav
 
   LEVEL_DELIMITER = "." # NOTE: Level delimiter constant
-  LEVEL_SEPARATOR = "-" # NOTE: Level separator constant
 
   #
   # Ignore level attribute in pages and use 
@@ -158,67 +157,6 @@ module MaiNav
         end
       end 
 
-    end
-
-    # TODO: rename to "id_for(page)" or "level_for(page)"
-    def self.get_page_id(page)
-      if page.index?
-        # NOTE: (LIST)
-        # Index pages occour when their basename is index. 
-        # That usually means that they are used in pretty permalink
-        # structures. That may very well be true all the time.
-        # Here we mostly have to assume their relationships with parent pages 
-        # by their directory path. This has to be calculated using the dir property of 
-        # pages, because this is their final destination after all. Do not consider path.
-        # Their parents name comes from parent page's TITLE attribute. 
-        # Directory paths seem to be always the no.1 identifier of parent-child relations, 
-        # but LEVEL attribute and category should override it.
-        #
-        # TODO: See if pretty permalinks are used.
-        # 
-        pattern = /^.+?[#{ID_SEPARATOR}]/
-
-        (pattern =~ page.name).nil?.to_s + " #{page.name}"
-      elsif page.html?
-        # NOTE: (LIST) 
-        # Html pages don't use pretty urls so that means that
-        # there must be other way to find parent-children relations
-        # between them. For exsample the LEVEL attribute or file name pattern "1.2-name". 
-        # When pattern is not detected we must assume they are top level pages probably(1).
-        # Also note that html pages can be nested in subdirectories so calculating the 
-        # relationships comes more difficult for pages who have LEVEL patterns.
-        # First of all we have to assume that pages parent is it's upper directory and
-        # then use the LEVEL attribute or pattern if existing.
-        #
-        # TODO: 1. Make sure the assumption for being top level page is solid.
-        #
-        #
-        pattern = /^.+?[#{ID_SEPARATOR}]/
-
-        #(pattern =~ page.name).nil?.to_s + " #{page.name}"
-        page.name.match(pattern).to_s + " #{page.name}"
-
-     else
-        # NOTE: (LIST) 
-        # These pages are not content pages and in that case not be considered
-        # for navigation structure. 
-        # These are text files with some frontmatter declared - .scss, .txt etc..
-        # We assume that these files are documents that are linked from pages's content etc..
-        #
-        #
-        "#{page.dir} - Something else"
-      end
-      
-    end
-
-
-
-    def self.suggest_parent_for(page)
-      #if page.level > 1
-      #  page.levels.take(page.level-1).join(".") # NOTE: level separator
-      #else
-      #  "top_level"
-      #end
     end
 
   end

@@ -2,7 +2,7 @@ module MaiNav
 
 	class MaiCrumsTag < Liquid::Tag
 
-    TAG_NAME = 'maicrums'
+    TAG_NAME = 'breadcrumbs'
 
     def initialize(tag_name, args, tokens)
       #
