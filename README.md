@@ -14,9 +14,10 @@ Purpose: All your navigation needs in Jekyll!
  - [x] Nested list for all site's pages (_categories:*_).
  - [ ] Nested list based on given path.
  - [x] Nested list based on path structure.
+ - [ ] Nested list based on current page's sub pages(form of toc).  
  - [x] Nesting depth limiting attribute (_depth:2_).
  - [x] Class names for current page, ancestors, has-children. 
- - [ ] Table of contents per page
+ - [ ] Table of contents per page.
  - [ ] Configuration file options support 
  - [x] Bread crumbs support(_breadcrumbs_).
  - [x] Option for bread crumbs to set parent elements(HOME) inclusion or title(_home: attribute for title_).
