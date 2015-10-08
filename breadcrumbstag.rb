@@ -1,6 +1,6 @@
 module MaiNav
 
-	class MaiCrumsTag < Liquid::Tag
+	class BreadCrumbsTag < Liquid::Tag
 
     TAG_NAME = 'breadcrumbs'
 

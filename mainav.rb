@@ -18,27 +18,10 @@
 #
 # @licence: One of those it's free and don't sue licences. 
 #
-=begin
-  TODO: (LIST)
-
-  - [ ] Multilevel navigation by categories and paths
-  - [ ] Breadcrums  
-
-=end
-
-#
-# Modifications to the Jekyll Page class
-#require_relative 'includes/page.rb'
-#
-# Mainav rendering engine
-#require_relative 'includes/mainavpages'
-#
-# Liquid "catnav" tag
-#require_relative 'includes/catnavtag.rb'     
 #
 # Register catnav tag
 Liquid::Template.register_tag( MaiNav::CatNavTag::TAG_NAME, MaiNav::CatNavTag)
-Liquid::Template.register_tag( MaiNav::MaiCrumsTag::TAG_NAME, MaiNav::MaiCrumsTag)
+Liquid::Template.register_tag( MaiNav::BreadCrumbsTag::TAG_NAME, MaiNav::BreadCrumbsTag)
 
 module MaiNav
 

@@ -24,7 +24,6 @@ module MaiNav
 
         # Scan for tag arguments
         #
-        # TODO: Implement all the attribute ideas.. 
         args.scan(Liquid::TagAttributes) do |key, value|  
           #
           # Id for UL element
@@ -56,7 +55,6 @@ module MaiNav
     def render(context)
       #
       # TODO: Review this methods code.
-      # NOTE: Using class or instance variables might be benefit for speed. 
       #
       # Check if pages have allready been fetched and seva some time on each rendering.
       if @@pages.nil?
