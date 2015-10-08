@@ -159,7 +159,10 @@ module MaiNav
 
     end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> mainav-code-refurbish
   end
 
 end
