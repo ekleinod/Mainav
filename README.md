@@ -23,6 +23,7 @@ Purpose: All your navigation needs in Jekyll!
  - [x] Option for bread crumbs to set parent elements(HOME) inclusion or title(_home: attribute for title_).
  - [ ] ~~Option to ignore top element (Maybe useful?)~~
  - [x] Field for navigation title(_navtitle:_).
+ - [ ] Option to exclude page from navigation.
  - [ ] Support for post archive navigations
  - [ ] Next, previous and parent page link tags. 
  
