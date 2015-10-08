@@ -18,10 +18,10 @@ Purpose: All your navigation needs in Jekyll!
  - [x] Class names for current page, ancestors, has-children. 
  - [ ] Table of contents per page
  - [ ] Configuration file options support 
- - [ ] Bread crumbs support
- - [ ] Option for bread crumbs to set parent elements(HOME) inclusion or title.
+ - [x] Bread crumbs support(_breadcrumbs_).
+ - [x] Option for bread crumbs to set parent elements(HOME) inclusion or title(_home: attribute for title_).
  - [ ] ~~Option to ignore top element (Maybe useful?)~~
- - [ ] Field for navigation title
+ - [x] Field for navigation title(_navtitle:_).
  - [ ] Support for post archive navigations
  - [ ] Next, previous and parent page link tags. 
  
@@ -133,6 +133,39 @@ If asterisk `*` is used as categories value, then navigation is generated for al
 
     {% catnav depth:2  %}
 ```
+
+
+### Liquid tag: breadcrumbs
+
+Generates a HTML list of pages leading to current page. 
+
+Example
+
+    {% breadcrumbs %}
+
+**Supported attributes:**
+ 
+ - **classes** - Wrapping UL element's `class` attribute. Multiple classes can be specified by wrapping them into double quotes and separating with spaces.
+
+```        
+
+    {% breadcrumbs classes:"hansel gretel"  %}
+```
+
+ - **id** - Wrapping UL element's `id` attribute.
+
+```        
+
+    {% breadcrumbs id:"hg1" %}
+```
+
+ - **home** - Home elements title text. By default site's index page title is used or "Home". 
+
+```        
+
+    {% breadcrumbs home:"My site"  %}
+```
+
 
 ### That's it ?
 
