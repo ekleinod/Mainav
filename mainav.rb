@@ -30,7 +30,7 @@ module MaiNav
   #
   # Ignore level attribute in pages and use 
   # it just for aligning same level pages.
-  IGNORE_LEVEL    = true
+  IGNORE_LEVEL    = true # NOTE: Ignore level set to true
 
   #
   # Utility functions for various stuff
@@ -85,10 +85,10 @@ module MaiNav
       #
       #
       # Is level atribute set 
-      if page.data["level"].nil? || MaiNav::IGNORE_LEVEL == true
+      if MaiNav::IGNORE_LEVEL == true || page.data["level"].nil?
         # Make levels out of directory structure
-        #page.mlevel = page.dir.split("/").drop(1).join(LEVEL_DELIMITER)
-        page.mlevel = "top" + page.dir.split("/").join(LEVEL_DELIMITER)
+        page.mlevel = page.dir.split("/").drop(1).join(LEVEL_DELIMITER)
+        #page.mlevel = "top" + page.dir.split("/").join(LEVEL_DELIMITER)
       else
         #
         # Convert to string incase 1.1, 1.2 ... are detected as a float.

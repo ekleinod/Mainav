@@ -7,14 +7,13 @@
 module Jekyll
 
   class Page    
-    
-    #
-    # Holds link to page's parent page.
-    #
+  	#
+  	# page  - Page's parent page.
+  	# categories - Array of categories the page belongs to.
+  	# mlevel - Determines pages hierarchy. 
+  	#
     attr_reader :parent, :categories, :mlevel
     attr_writer :parent, :categories, :mlevel
-
-
   end
    
 end

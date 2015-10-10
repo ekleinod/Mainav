@@ -56,7 +56,7 @@ module MaiNav
       #
       # TODO: Review this methods code.
       #
-      # Check if pages have allready been fetched and seva some time on each rendering.
+      # Check if pages have allready been fetched and save some time on each rendering.
       if @@pages.nil?
         site = context.registers[:site]
         #
@@ -179,7 +179,7 @@ module MaiNav
         #
         # Render the LI element
         html << %(<li class="#{classes.join(" ")}" >
-              <a href="#{page.url}"> #{page.data["navtitle"] || page.data["title"]} </a> 
+              <a href="#{page.url}">#{page.data["navtitle"] || page.data["title"]}</a> 
               #{subhtml}
               </li> )
       }

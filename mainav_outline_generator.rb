@@ -1,7 +1,5 @@
 #
-#
-#
-#
+# Generator to pregenerate pages relations and hierarchy.
 #
 #
 module Jekyll
