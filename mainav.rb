@@ -12,11 +12,12 @@
 #
 #
 # @author Aksel Meola <aksel@meola.eu>
-# @version 0.1-refurbish
+# @author Ekkart Kleinod <ekleinod@edgesoft.de>
+# @version 0.2
 # @start_date 24.09.15
 # @demo http://pascal.meola.eu uses it for it's navigation stuff.
 #
-# @licence: One of those it's free and don't sue licences.
+# @license: One of those it's free and don't sue licences.
 
 # Include needed files
 require_relative 'breadcrumbstag.rb'
@@ -26,6 +27,7 @@ require_relative 'catnavtag.rb'
 Liquid::Template.register_tag( MaiNav::CatNavTag::TAG_NAME, MaiNav::CatNavTag)
 Liquid::Template.register_tag( MaiNav::BreadCrumbsTag::TAG_NAME, MaiNav::BreadCrumbsTag)
 
+# main module for all code
 module MaiNav
 
 	LEVEL_DELIMITER = "." # NOTE: Level delimiter constant
