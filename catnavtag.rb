@@ -83,6 +83,12 @@ module MaiNav
 					(page.html? || page.index?) && (page.[]('hide-nav') != true)
 				}
 				#
+				# sort pages by title
+				# TODO: sorting as parameter?
+				@@pages.sort_by! {|page|
+					page.[]('title')
+				}
+				#
 				# Get all available categories
 				# TODO: This is very inefficent piece of monkey doodoo
 				@@pages.each{|page|
@@ -90,20 +96,19 @@ module MaiNav
 				}
 				@@categories.uniq!
 
-				testpage = site.pages[0]
-				out << %(<p>#{testpage.[]('hide-nav') || "---"}</p>)
-				out << %(<p>#{@@pages || "---"}</p>)
-
 			end
 
 			#
 			# Current page for rendering current item class
 			# and current pages's category
 			cp = context.registers[:page]
+
 			# Get current pages's Page object
 			@cp = @@pages.select {|page|
 				page.path == cp["path"]
 			}.first
+
+#out << %(<p>#{@cp || "---"}</p>)
 
 			#
 			# If category is not specified
